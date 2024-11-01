@@ -1,10 +1,10 @@
 {
-    "env": {
+	"env": {
 		"browser": true,
 		"es6": true,
 		"es2017": true
-    },
-    "extends": [
+	},
+	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
 		"plugin:@typescript-eslint/recommended",
@@ -17,6 +17,17 @@
 		"tsconfigRootDir": "."
 	},
 	// Плагин с наборами правил для TypeScript
-	"plugins": ["@typescript-eslint"],
-	"rules": {}
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"@typescript-eslint/quotes": [
+			"error",
+			"single",
+			{
+				"allowTemplateLiterals": true
+			}
+		],
+	"rules": {
+		"quotes": [2, "prefer-single"]
+	}
 }
