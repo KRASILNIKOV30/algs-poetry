@@ -1,12 +1,5 @@
-import type { Mealy, MealyState, MealyStates, Moore } from './types';
- 
-function reduceRec<T, U>(
-    rec: Record<string, T>,
-    callback: (prev: U, cur: [string, T]) => U,
-    initValue: U,
-): U {
-    return Object.entries(rec).reduce(callback, initValue)
-}
+import { reduceRec } from '../reduceRec';
+import type { Mealy, MealyState, MealyStates, Moore } from '../types';
 
 function createMooreMachine(mooreData: Moore) {
     const data = mooreData

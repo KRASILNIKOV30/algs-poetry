@@ -1,5 +1,5 @@
+import { Mealy } from "../types"
 import { createMooreMachine } from "./mooreMachine"
-import { Mealy } from "./types"
 
 describe('moore to mealy', () => {
     it('only 1 state', () => {

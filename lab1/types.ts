@@ -12,15 +12,21 @@ type MealyState = Record<string, {
 
 type Moore = {
     type: 'moore',
-    states: Record<string, {
-        output: string,
-        transitions: Record<string, string>,
-    }>
+    states: MooreStates
+}
+
+type MooreStates = Record<string, MooreState>
+
+type MooreState = {
+    output: string,
+    transitions: Record<string, string>,
 }
 
 export type {
     Mealy,
     MealyStates,
     MealyState,
-    Moore
+    Moore,
+    MooreStates,
+    MooreState,
 }
