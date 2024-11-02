@@ -12,7 +12,7 @@ type MealyState = Record<string, {
 
 type Moore = {
     type: 'moore',
-    states: MooreStates
+    states: MooreStates,
 }
 
 type MooreStates = Record<string, MooreState>
@@ -23,10 +23,10 @@ type MooreState = {
 }
 
 export type {
-    Mealy,
-    MealyStates,
-    MealyState,
-    Moore,
-    MooreStates,
-    MooreState,
+	Mealy,
+	MealyStates,
+	MealyState,
+	Moore,
+	MooreStates,
+	MooreState,
 }

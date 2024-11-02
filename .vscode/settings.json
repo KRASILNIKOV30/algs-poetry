@@ -1,0 +1,15 @@
+{
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "javascript.preferences.importModuleSpecifierEnding": "js",
+    "typescript.preferences.importModuleSpecifierEnding": "index",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "css.lint.emptyRules": "ignore",
+    "css.validate": false,
+    "eslint.workingDirectories": [
+        "./lab1"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    }
+}
