@@ -1,20 +1,19 @@
-import { forEachRec, reduceRec } from '../reduceRec';
+import { reduceRec } from '../reduceRec';
 import type { Mealy, Moore, MooreState, MooreStates } from '../types';
  
+type Outs = [string, string][]
+
 function createMealyMachine(mealyData: Mealy) {
     const data = mealyData
 
+    function toMoore(): Moore {    
+        const outputs = reduceRec(data.states, (acc, [_, state]) => (
+            acc.concat(reduceRec(state, (acc, [_, { nextState, output }]) => (
+                acc.concat([[nextState, output]])
+            ), [] as Outs))
+        ), [] as Outs)
 
-    // Сначала пробежаться по всем состояниям и закинуть 
-    function toMoore(): Moore {
-        const outputs: [string, string][] = reduceRec(data.states, (acc, [name, state]) => 
-            reduceRec(state, (acc, []) => [
-                
-            ]), [])
-
-        forEachRec(data.states, ([name, state]) => {
-
-        })
+        console.log(outputs)
 
         const result: Moore = {
             type: 'moore',
