@@ -224,7 +224,7 @@ describe('Mealy Machine Minimization', () => {
 						output: 'a',
 					},
 					x2: {
-						nextState: 'S2',
+						nextState: 'S1',
 						output: 'b',
 					},
 				},
@@ -279,17 +279,7 @@ describe('Mealy Machine Minimization', () => {
 			states: {
 				S0: {
 					x1: {
-						nextState: 'S1',
-						output: 'a',
-					},
-					x2: {
-						nextState: 'S2',
-						output: 'b',
-					},
-				},
-				S1: {
-					x1: {
-						nextState: 'S1',
+						nextState: 'S0',
 						output: 'a',
 					},
 					x2: {
@@ -297,7 +287,6 @@ describe('Mealy Machine Minimization', () => {
 						output: 'b',
 					},
 				},
-				// Убедитесь, что состояния S3 и S4 не включены, если они недостижимы
 			},
 		})
 	})

@@ -94,9 +94,9 @@ function createMealyMachine(mealyData: Mealy) {
 			for (const group of partitions) {
 				const transitionMap = new Map<string, string[]>()
 				for (const state of group) {
-					const transitions = reduceRec(data.states[state].transitions, (acc, [input, stateName]) => ({
+					const transitions = reduceRec(data.states[state], (acc, [input, {nextState}]) => ({
 						...acc,
-						[input]: getStateGroupIndex(stateName),
+						[input]: getStateGroupIndex(nextState),
 					}), {} as GroupTransitions)
 					const transitionKey = JSON.stringify(transitions) + JSON.stringify(group)
 					if (transitionMap.has(transitionKey)) {
@@ -138,9 +138,19 @@ function createMealyMachine(mealyData: Mealy) {
 			})
 		})
 
+		const reachableStates = checkReachability(newStates, 'S0')
+
+
 		return {
 			type: 'mealy',
-			states: newStates,
+			states: reduceRec(newStates, (acc, [name, state]) => (
+				reachableStates.has(name)
+					? {
+						...acc,
+						[name]: state,
+					}
+					: acc
+			), {} as MealyStates),
 		}
 	}
 
@@ -148,6 +158,28 @@ function createMealyMachine(mealyData: Mealy) {
 		toMoore,
 		minimize,
 	}
+}
+
+function checkReachability(states: MealyStates, startState: string): Set<string> {
+	const reachableStates = new Set<string>()
+	const stack: string[] = [startState]
+
+	while (stack.length) {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const currentState = stack.pop()!
+		if (!reachableStates.has(currentState)) {
+			reachableStates.add(currentState)
+			const transitions = states[currentState]
+			for (const transition of Object.values(transitions)) {
+				const nextState = transition.nextState
+				if (!reachableStates.has(nextState)) {
+					stack.push(nextState)
+				}
+			}
+		}
+	}
+
+	return reachableStates
 }
 
 export {
