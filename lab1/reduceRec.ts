@@ -13,7 +13,13 @@ function forEachRec<T>(
 	Object.entries(rec).forEach(callback)
 }
 
+const size = (rec: Record<string, unknown>) =>
+	Object.entries(rec).length
+
+const isEmpty = (rec: Record<string, unknown>) => size(rec) === 0
+
 export {
 	reduceRec,
 	forEachRec,
+	isEmpty,
 }

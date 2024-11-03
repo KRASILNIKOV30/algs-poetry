@@ -19,8 +19,10 @@ type MooreStates = Record<string, MooreState>
 
 type MooreState = {
     output: string,
-    transitions: Record<string, string>,
+    transitions: Transitions,
 }
+
+type Transitions = Record<string, string>
 
 export type {
 	Mealy,
@@ -29,4 +31,5 @@ export type {
 	Moore,
 	MooreStates,
 	MooreState,
+	Transitions,
 }
