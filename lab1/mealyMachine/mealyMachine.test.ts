@@ -1,4 +1,4 @@
-import type {Moore} from '../types'
+import type {Mealy, Moore} from '../types'
 import {createMealyMachine} from './mealyMachine'
 
 describe('moore to mealy', () => {
@@ -143,5 +143,162 @@ describe('moore to mealy', () => {
 		}
 
 		expect(mealyMachine.toMoore()).toEqual(expected)
+	})
+})
+
+describe('Mealy Machine Minimization', () => {
+	it('minimizes a simple Mealy machine', () => {
+		const data: Mealy = {
+			type: 'mealy',
+			states: {
+				S0: {
+					x1: {
+						nextState: 'S1',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'b',
+					},
+				},
+				S1: {
+					x1: {
+						nextState: 'S0',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'b',
+					},
+				},
+				S2: {
+					x1: {
+						nextState: 'S0',
+						output: 'c',
+					},
+					x2: {
+						nextState: 'S1',
+						output: 'd',
+					},
+				},
+			},
+		}
+
+		const machine = createMealyMachine(data)
+		const minimizedMachine = machine.minimize()
+
+		expect(minimizedMachine).toEqual({
+			type: 'mealy',
+			states: {
+				S0: {
+					x1: {
+						nextState: 'S0',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S1',
+						output: 'b',
+					},
+				},
+				S1: {
+					x1: {
+						nextState: 'S0',
+						output: 'c',
+					},
+					x2: {
+						nextState: 'S0',
+						output: 'd',
+					},
+				},
+			},
+		})
+	})
+
+	it('handles unreachable states', () => {
+		const data: Mealy = {
+			type: 'mealy',
+			states: {
+				S0: {
+					x1: {
+						nextState: 'S1',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'b',
+					},
+				},
+				S1: {
+					x1: {
+						nextState: 'S1',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S0',
+						output: 'b',
+					},
+				},
+				S2: {
+					x1: {
+						nextState: 'S3',
+						output: 'c',
+					},
+					x2: {
+						nextState: 'S4',
+						output: 'd',
+					},
+				},
+				S3: {
+					x1: {
+						nextState: 'S1',
+						output: 'e',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'f',
+					},
+				},
+				S4: {
+					x1: {
+						nextState: 'S1',
+						output: 'g',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'h',
+					},
+				},
+			},
+		}
+
+		const machine = createMealyMachine(data)
+		const minimizedMachine = machine.minimize()
+
+		expect(minimizedMachine).toEqual({
+			type: 'mealy',
+			states: {
+				S0: {
+					x1: {
+						nextState: 'S1',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S2',
+						output: 'b',
+					},
+				},
+				S1: {
+					x1: {
+						nextState: 'S1',
+						output: 'a',
+					},
+					x2: {
+						nextState: 'S0',
+						output: 'b',
+					},
+				},
+				// Убедитесь, что состояния S3 и S4 не включены, если они недостижимы
+			},
+		})
 	})
 })

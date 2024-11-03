@@ -56,7 +56,7 @@ importPlugin.flatConfigs.recommended,
 
 		parserOptions: {
 			project: './tsconfig.json',
-			tsconfigRootDir: '.',
+			tsconfigRootDir: __dirname,
 			sourceType: 'module',
 		},
 	},

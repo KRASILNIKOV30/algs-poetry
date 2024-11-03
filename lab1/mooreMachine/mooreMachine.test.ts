@@ -1,4 +1,4 @@
-import type {Mealy} from '../types'
+import type {Mealy, Moore} from '../types'
 import {createMooreMachine} from './mooreMachine'
 
 describe('moore to mealy', () => {
@@ -107,5 +107,203 @@ describe('moore to mealy', () => {
 		}
 
 		expect(mooreMachine.toMealy()).toEqual(expected)
+	})
+})
+
+describe('createMooreMachine', () => {
+	it('should minimize a simple Moore machine', () => {
+		const machine = createMooreMachine({
+			type: 'moore',
+			states: {
+				A: {
+					output: 'X',
+					transitions: {
+						'0': 'B',
+						'1': 'C',
+					},
+				},
+				B: {
+					output: 'Y',
+					transitions: {
+						'0': 'A',
+						'1': 'D',
+					},
+				},
+				C: {
+					output: 'X',
+					transitions: {
+						'0': 'B',
+						'1': 'C',
+					},
+				},
+				D: {
+					output: 'Z',
+					transitions: {
+						'0': 'D',
+						'1': 'D',
+					},
+				},
+			},
+		})
+
+		const minimizedMachine = machine.minimize()
+
+		expect(minimizedMachine).toEqual({
+			type: 'moore',
+			states: {
+				S0: {
+					output: 'X',
+					transitions: {
+						'0': 'S1',
+						'1': 'S0',
+					},
+				},
+				S1: {
+					output: 'Y',
+					transitions: {
+						'0': 'S0',
+						'1': 'S2',
+					},
+				},
+				S2: {
+					output: 'Z',
+					transitions: {
+						'0': 'S2',
+						'1': 'S2',
+					},
+				},
+			},
+		})
+	})
+
+	it('should handle a machine with only one state', () => {
+		const machine = createMooreMachine({
+			type: 'moore',
+			states: {
+				A: {
+					output: 'X',
+					transitions: {},
+				},
+			},
+		})
+
+		const minimizedMachine = machine.minimize()
+
+		expect(minimizedMachine).toEqual({
+			type: 'moore',
+			states: {
+				S0: {
+					output: 'X',
+					transitions: {},
+				},
+			},
+		})
+	})
+
+	it('should minimize a machine with equivalent states', () => {
+		const machine = createMooreMachine({
+			type: 'moore',
+			states: {
+				A: {
+					output: 'X',
+					transitions: {'0': 'B'},
+				},
+				B: {
+					output: 'X',
+					transitions: {'0': 'A'},
+				},
+			},
+		})
+
+		const minimizedMachine = machine.minimize()
+
+		expect(minimizedMachine).toEqual({
+			type: 'moore',
+			states: {
+				S0: {
+					output: 'X',
+					transitions: {'0': 'S0'},
+				},
+			},
+		})
+	})
+
+	it('should correctly handle more complex machines', () => {
+		const machine = createMooreMachine({
+			type: 'moore',
+			states: {
+				a1: {
+					output: 'u1',
+					transitions: {
+						x1: 'a3',
+						x2: 'a5',
+					},
+				},
+				a2: {
+					output: 'u1',
+					transitions: {
+						x1: 'a4',
+						x2: 'a6',
+					},
+				},
+				a3: {
+					output: 'u2',
+					transitions: {
+						x1: 'a3',
+						x2: 'a5',
+					},
+				},
+				a4: {
+					output: 'u2',
+					transitions: {
+						x1: 'a4',
+						x2: 'a6',
+					},
+				},
+				a5: {
+					output: 'u1',
+					transitions: {
+						x1: 'a5',
+						x2: 'a1',
+					},
+				},
+				a6: {
+					output: 'u1',
+					transitions: {
+						x1: 'a6',
+						x2: 'a2',
+					},
+				},
+			},
+		})
+
+		const expected: Moore = {
+			type: 'moore',
+			states: {
+				S0: {
+					output: 'u1',
+					transitions: {
+						x1: 'S2',
+						x2: 'S1',
+					},
+				},
+				S1: {
+					output: 'u1',
+					transitions: {
+						x1: 'S1',
+						x2: 'S0',
+					},
+				},
+				S2: {
+					output: 'u2',
+					transitions: {
+						x1: 'S2',
+						x2: 'S1',
+					},
+				},
+			},
+		}
+
+		expect(machine.minimize()).toEqual(expected)
 	})
 })

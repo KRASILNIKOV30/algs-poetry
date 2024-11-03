@@ -2,7 +2,7 @@ import {
 	forEachRec, isEmpty, reduceRec,
 } from '../reduceRec'
 import type {
-	Mealy, MealyState, Moore, MooreStates,
+	Mealy, MealyState, MealyStates, Moore, MooreStates,
 	Transitions,
 } from '../types'
 
@@ -63,8 +63,90 @@ function createMealyMachine(mealyData: Mealy) {
 		return result
 	}
 
+	type GroupTransitions = Record<string, number>
+
+	function minimize(): Mealy {
+		const states = Object.keys(data.states)
+		const outputGroups = new Map<string, string[]>()
+
+		for (const state of states) {
+			const outputsKey = reduceRec(data.states[state], (key, cur) => key + cur[1].output, '')
+			if (!outputGroups.has(outputsKey)) {
+				outputGroups.set(outputsKey, [])
+			}
+			outputGroups.get(outputsKey)?.push(state)
+		}
+
+		let partitions = Array.from(outputGroups.values())
+
+		const getStateGroupIndex = (state: string) =>
+			partitions.reduce((res, group, i) =>
+				group.includes(state)
+					? i
+					: res,
+			-1)
+
+		let stable = false
+
+		while (!stable) {
+			stable = true
+			const newPartitions: string[][] = []
+			for (const group of partitions) {
+				const transitionMap = new Map<string, string[]>()
+				for (const state of group) {
+					const transitions = reduceRec(data.states[state].transitions, (acc, [input, stateName]) => ({
+						...acc,
+						[input]: getStateGroupIndex(stateName),
+					}), {} as GroupTransitions)
+					const transitionKey = JSON.stringify(transitions) + JSON.stringify(group)
+					if (transitionMap.has(transitionKey)) {
+						transitionMap.get(transitionKey)?.push(state)
+					}
+					else {
+						transitionMap.set(transitionKey, [state])
+					}
+				}
+				const newGroups = Array.from(transitionMap.values())
+				if (newGroups.length > 1) {
+					stable = false
+					newGroups.forEach(newGroup => {
+						newPartitions.push(newGroup)
+					})
+				}
+				else {
+					newPartitions.push(group)
+				}
+			}
+			partitions = newPartitions
+		}
+		const newStates: MealyStates = {}
+
+		partitions.forEach((group, index) => {
+			const newState = `S${index}`
+
+			newStates[newState] = {}
+
+			group.forEach(state => {
+				const transitions = data.states[state]
+				for (const [input, {nextState, output}] of Object.entries(transitions)) {
+					const nextGroupIndex = partitions.findIndex(g => g.includes(nextState))
+					newStates[newState][input] = {
+						nextState: `S${nextGroupIndex}`,
+						output,
+					}
+				}
+			})
+		})
+
+		return {
+			type: 'mealy',
+			states: newStates,
+		}
+	}
+
 	return {
 		toMoore,
+		minimize,
 	}
 }
 
