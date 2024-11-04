@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 
-import {reduceRec} from '../reduceRec'
+import { reduceRec } from '../reduceRec'
 import type {
 	Mealy,
 	MealyState,
@@ -12,7 +12,7 @@ import type {
 function createMooreMachine(mooreData: Moore) {
 	const data = mooreData
 
-	const toMealy = (): Mealy => ({
+	const morph = (): Mealy => ({
 		type: 'mealy',
 		states: reduceRec(data.states, (states, [stateName, state]) => ({
 			...states,
@@ -115,11 +115,18 @@ function createMooreMachine(mooreData: Moore) {
     }
 
     return {
-    	toMealy,
+    	morph,
     	minimize,
     }
 }
 
-export {
-	createMooreMachine,
+type MooreMachine = ReturnType<typeof createMooreMachine>
+
+export type {
+	MooreMachine
 }
+
+export {
+	createMooreMachine
+}
+

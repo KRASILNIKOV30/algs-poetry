@@ -1,0 +1,28 @@
+{
+    "type": "mealy",
+    "states": {
+        "S1": {
+            "1": {
+                "nextState": "S3",
+                "output": "w1"
+            },
+            "2": {
+                "nextState": "S2",
+                "output": "w1"
+            }
+        },
+        "S2": {
+            "1": {
+                "nextState": "S3",
+                "output": "w2"
+            }
+        },
+        "S3": {
+            "1": {
+                "nextState": "S4",
+                "output": "w2"
+            }
+        },
+        "S4": {}
+    }
+}

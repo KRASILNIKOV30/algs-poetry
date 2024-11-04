@@ -1,5 +1,5 @@
-import type {Mealy, Moore} from '../types'
-import {createMealyMachine} from './mealyMachine'
+import type { Mealy, Moore } from '../types'
+import { createMealyMachine } from './mealyMachine'
 
 describe('moore to mealy', () => {
 	it('only 1 state', () => {
@@ -32,7 +32,7 @@ describe('moore to mealy', () => {
 			},
 		}
 
-		expect(mealyMachine.toMoore()).toEqual(expected)
+		expect(mealyMachine.morph()).toEqual(expected)
 	})
 
 	it('increasing number of states', () => {
@@ -74,7 +74,7 @@ describe('moore to mealy', () => {
 			},
 		}
 
-		expect(mealyMachine.toMoore()).toEqual(expected)
+		expect(mealyMachine.morph()).toEqual(expected)
 	})
 
 	it('test with doubling', () => {
@@ -142,7 +142,7 @@ describe('moore to mealy', () => {
 			},
 		}
 
-		expect(mealyMachine.toMoore()).toEqual(expected)
+		expect(mealyMachine.morph()).toEqual(expected)
 	})
 })
 

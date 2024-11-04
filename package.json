@@ -23,6 +23,7 @@
     "@typescript-eslint/eslint-plugin": "^8.12.1",
     "@typescript-eslint/parser": "^8.12.1",
     "eslint-plugin-sort-exports": "^0.9.1",
+    "fs": "*",
     "jest-environment-jsdom": "^29.7.0",
     "ts-node": "^10.9.2"
   },

@@ -1,0 +1,1 @@
+{"type":"moore","states":{"S1":{"output":"","transitions":{"1":"S3_w1","2":"S2_w1"}},"S2_w1":{"output":"w1","transitions":{"1":"S3_w2"}},"S3_w1":{"output":"w1","transitions":{"1":"S4_w2"}},"S3_w2":{"output":"w2","transitions":{"1":"S4_w2"}},"S4_w2":{"output":"w2","transitions":{}}}}

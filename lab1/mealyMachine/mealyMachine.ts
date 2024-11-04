@@ -11,7 +11,7 @@ type Outs = Record<string, Set<string>>
 function createMealyMachine(mealyData: Mealy) {
 	const data = mealyData
 
-	function toMoore(): Moore {
+	function morph(): Moore {
 
 		const outputs: Outs = {}
 
@@ -155,7 +155,7 @@ function createMealyMachine(mealyData: Mealy) {
 	}
 
 	return {
-		toMoore,
+		morph,
 		minimize,
 	}
 }
@@ -182,6 +182,13 @@ function checkReachability(states: MealyStates, startState: string): Set<string>
 	return reachableStates
 }
 
-export {
-	createMealyMachine,
+type MealyMachine = ReturnType<typeof createMealyMachine>
+
+export type {
+	MealyMachine
 }
+
+export {
+	createMealyMachine
+}
+
